@@ -20,27 +20,14 @@
 body {
 	margin: 0;
 	padding: 0;
-	min-height: 100vh;
+	height: 100vh;
 	width: 100vw;
+	overflow-y: auto;
+	overflow-x: hidden;
+
 }
 
-* {
-	box-sizing: border-box;
-}
-#dashboard {
-	/* height: 100vh; */
-	width: 100vw;
-	background-color: var(--black);
-	color: white;
-	font-family: "Work Sans", serif;
-	overflow: hidden;
-}
-
-.theme-container {
-	background: rgba(0, 0, 0, 0.59);
-	border-radius: 20px;
-	padding: 2rem;
-}
+ 
 
 .gradient-red {
 	position: absolute;
@@ -78,8 +65,9 @@ body {
 
 /* scrollbar */
 ::-webkit-scrollbar {
-	width: 5px;
-	height: 5px;
+	width: 2px;
+	height: 2px;
+	border-radius: 50px;
 }
 
 ::-webkit-scrollbar-track {
@@ -88,7 +76,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
 	background-color: darkgrey;
-	width: 5px;
+	width: 2px;
 }
 
 /* * {

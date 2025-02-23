@@ -14,35 +14,31 @@ import NotFound from "./pages/NotFound";
 
 import Layout from "./components/Layout";
 import { useState } from "react";
+import { UserProvider } from "./Context/UserContext";
 
 function App() {
 	const [user, setUser] = useState(null);
 
 	return (
-		<Routes>
-			{/* Public Routes */}
-			<Route path="signin" element={<SignIn setUser={setUser} />} />
-			<Route path="signup" element={<SignUp setUser={setUser} />} />
-			<Route path="resetlogin" element={<ResetLogin />} />
+		<UserProvider>
+			<Routes>
+				{/* Public Routes */}
+				<Route path="signin" element={<SignIn />} />
+				<Route path="signup" element={<SignUp />} />
+				<Route path="resetlogin" element={<ResetLogin />} />
 
-			{/* Protected Routes with Layout */}
-			<Route
-				path="/"
-				element={
-					<ProtectedRoute>
-						<Layout user={user} />
-					</ProtectedRoute>
-				}
-			>
-				<Route index element={<Dashboard />} />
-				<Route path="analytics" element={<Analytics />} />
-				<Route path="mywallet" element={<MyWallet />} />
-				<Route path="transactions" element={<Transactions />} />
-				<Route path="account" element={<Accounts user={user} />} />
-				<Route path="setting" element={<Settings />} />
-				<Route path="*" element={<NotFound />} />
-			</Route>
-		</Routes>
+				{/* Protected Routes with Layout */}
+				<Route path="/" element={<Layout />}>
+					<Route index element={<Dashboard />} />
+					<Route path="analytics" element={<Analytics />} />
+					<Route path="mywallet" element={<MyWallet />} />
+					<Route path="transactions" element={<Transactions />} />
+					<Route path="account" element={<Accounts />} />
+					<Route path="setting" element={<Settings />} />
+					<Route path="*" element={<NotFound />} />
+				</Route>
+			</Routes>
+		</UserProvider>
 	);
 }
 

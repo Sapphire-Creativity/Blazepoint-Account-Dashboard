@@ -6,8 +6,10 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { db } from "../Components/Firebase/config";
 import { doc, getDoc } from "firebase/firestore";
+import { useUser } from "../Context/UserContext";
 
-const SignIn = ({ setUser }) => {
+const SignIn = () => {
+	const { fetchUserData } = useUser(); // Get fetchUserData function
 	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -19,41 +21,25 @@ const SignIn = ({ setUser }) => {
 			const userCredential = await signInWithEmailAndPassword(
 				auth,
 				email,
-				password,
-				setUser
+				password
 			);
-			console.log("Login Successfully!");
+			const user = userCredential.user;
+
+			// Fetch user details after sign-in
+			await fetchUserData(user.uid);
+
 			toast.success("You are logged in successfully!", {
 				position: "top-center",
 			});
 
-			const user = userCredential.user;
-
-			//Fetch user data from Firestore
-
-			const userDoc = await getDoc(doc(db, "Users", user.uid));
-			if (userDoc.exists()) {
-				const userData = userDoc.data();
-				setUser({
-					uid: user.uid,
-					firstName: userData.firstName,
-					email: user.email,
-					lastName: userData.lastName,
-				});
-				console.log(userData.firstName);
-			}
-
-			//Delay navigation
-
+			// Redirect after success
 			setTimeout(() => {
 				navigate("/");
-			}, 5000);
+			}, 3000);
 		} catch (error) {
-			console.log(error.message);
 			toast.error(error.message);
 		}
 	};
-
 	return (
 		<div className="max-w-[50rem] sm:max-w-[70rem] mx-auto grid  grid-cols-1 sm:grid-cols-2 items-center justify-center min-h-screen bg-bg-custom-gradient py-14 px-10 gap-10">
 			<div className="w-full flex items-center text-center">

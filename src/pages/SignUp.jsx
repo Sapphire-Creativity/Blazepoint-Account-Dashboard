@@ -5,8 +5,9 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc, getDoc } from "firebase/firestore";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useUser } from "../Context/UserContext";
 
-const SignUp = ({ setUser }) => {
+const SignUp = () => {
 	const navigate = useNavigate();
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
@@ -14,6 +15,8 @@ const SignUp = ({ setUser }) => {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, setLoading] = useState(false);
+
+	const { fetchUserData } = useUser();
 
 	const handleSignUp = async (e) => {
 		e.preventDefault();
@@ -23,48 +26,32 @@ const SignUp = ({ setUser }) => {
 			return;
 		}
 
-		setLoading(true);
-
 		try {
-			await createUserWithEmailAndPassword(auth, email, password);
-			const user = auth.currentUser;
+			const userCredential = await createUserWithEmailAndPassword(
+				auth,
+				email,
+				password
+			);
+			const user = userCredential.user;
 
-			if (user) {
-				await setDoc(doc(db, "Users", user.uid), {
-					email: user.email,
-					firstName,
-					lastName,
-				});
-			}
+			// Store user details in Firestore
+			await setDoc(doc(db, "Users", user.uid), {
+				email: user.email,
+				firstName,
+				lastName,
+			});
+
+			// Fetch and update user details
+			fetchUserData(user.uid);
 
 			toast.success("Registered Successfully!", { position: "top-center" });
-			setLoading(false);
 
-			// Fetch user data from Firestore
-
-			const userDoc = await getDoc(doc(db, "Users", user.uid));
-			if (userDoc.exists()) {
-				const userData = userDoc.data();
-				setUser({
-					uid: user.uid,
-					firstName: userData.firstName,
-					lastName: userData.lastName,
-					email: user.email,
-				});
-
-				console.log(userData.firstName);
-			}
-
-			//delay navigation
+			// Redirect after success
 			setTimeout(() => {
 				navigate("/");
-			}, 5000);
+			}, 3000);
 		} catch (error) {
-			console.error("Error during registration:", error);
-			toast.error("Unable to register. Please try again later.", {
-				position: "bottom-center",
-			});
-			setLoading(false);
+			toast.error(error.message, { position: "bottom-center" });
 		}
 	};
 

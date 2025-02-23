@@ -3,7 +3,7 @@ import { Outlet } from "react-router-dom";
 import SideBar from "./SideBar";
 import TopBar from "./TopBar";
 
-const Layout = ({ user }) => {
+const Layout = () => {
 	const [collapsed, setCollapsed] = useState(false);
 
 	// Function to toggle sidebar
@@ -12,23 +12,19 @@ const Layout = ({ user }) => {
 	};
 
 	return (
-		<div className="flex w-full min-h-screen">
+		<div className="flex w-full h-[100%]">
 			{/* Sidebar */}
 			<div
-				className={`h-screen transition-all duration-300 ${
+				className={` transition-all duration-300 ${
 					collapsed ? "w-[5rem]" : "w-[16rem]"
 				}`}
 			>
-				<SideBar
-					collapsed={collapsed}
-					toggleSidebar={toggleSidebar}
-					user={user}
-				/>
+				<SideBar collapsed={collapsed} toggleSidebar={toggleSidebar} />
 			</div>
 
 			{/* Main Content Area */}
 			<div
-				className={`flex flex-col flex-1 min-h-screen transition-all duration-300 bg-accent ${
+				className={`flex flex-col flex-1 transition-all duration-300 bg-accent ${
 					collapsed ? "ml-[1rem]" : "ml-auto"
 				}`}
 			>

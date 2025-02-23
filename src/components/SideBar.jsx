@@ -12,8 +12,12 @@ import {
 	FaCog,
 	FaBars,
 } from "react-icons/fa";
+import { useUser } from "../Context/UserContext";
 
-const SideBar = ({ collapsed, toggleSidebar, user }) => {
+const SideBar = ({ collapsed, toggleSidebar }) => {
+	//
+	const { user, loading } = useUser();
+
 	return (
 		<div
 			className={`relative bg-primary text-white h-screen p-5 shadowTwo flex flex-col rounded-tr-[20px] rounded-br-[15px] transition-all duration-500 
@@ -55,10 +59,9 @@ const SideBar = ({ collapsed, toggleSidebar, user }) => {
 					{/* Text Content */}
 					<div className="text-center mt-4 text-white w-full">
 						<h2 className="text-[0.85rem] lg:text-lg font-semibold">
-							Hello, {user.firstName || "Guest"}! 👋
+							Hello, User! 👋
 						</h2>
-						<p>{user.email}</p>
-						<p>{user.uid}</p>
+
 						<p className="text-xs mt-2">Welcome to your dashboard.</p>
 					</div>
 				</div>
